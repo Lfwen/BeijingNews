@@ -10,12 +10,11 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.newsapp.lfw.beijingnews.R;
 
 import java.util.ArrayList;
-
-import static android.R.attr.left;
 
 public class GuideActivity extends Activity {
 
@@ -81,6 +80,8 @@ public class GuideActivity extends Activity {
 
         //得到屏幕滑动的百分比
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+
+
     }
 
     class MyPagerAdapter extends PagerAdapter
@@ -142,10 +143,11 @@ public class GuideActivity extends Activity {
         @Override
         public void onGlobalLayout() {
             //执行不只一次，所以监听一次就移除监听
-            iv_red_point.getViewTreeObserver().removeOnGlobalLayoutListener();
+            iv_red_point.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
             leftDes = ll_point_group.getChildAt(1).getLeft() - ll_point_group.getChildAt(0).getLeft();
-
+            Toast.makeText(GuideActivity.this, ""+leftDes, Toast.LENGTH_SHORT).show();
+            //        Log.d("leftDes", String.valueOf(leftDes));
         }
     }
 
