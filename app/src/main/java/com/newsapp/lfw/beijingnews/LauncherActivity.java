@@ -1,6 +1,7 @@
 package com.newsapp.lfw.beijingnews;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -8,10 +9,13 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import com.newsapp.lfw.beijingnews.activity.GuideActivity;
+import com.newsapp.lfw.beijingnews.utils.CacheUtils;
 
 public class LauncherActivity extends Activity {
 
+    public static final String START_MAIN = "start_main";
     private RelativeLayout activity_launcher;
 
     @Override
@@ -52,7 +56,20 @@ public class LauncherActivity extends Activity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            Toast.makeText(LauncherActivity.this, "动画播放结束", Toast.LENGTH_SHORT).show();
+            //判断是否进入过主页面
+            boolean isStartMain = CacheUtils.getBoolean(LauncherActivity.this, START_MAIN);
+            if(isStartMain)
+            {
+                //直接进入主界面
+            }
+            else
+            {
+                //进入引导页面
+                Intent intent = new Intent(LauncherActivity.this, GuideActivity.class);
+                startActivity(intent);
+            }
+//            Toast.makeText(LauncherActivity.this, "动画播放结束", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         @Override
