@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import com.newsapp.lfw.beijingnews.R;
 
 import java.util.ArrayList;
+
+import static android.R.attr.left;
 
 public class GuideActivity extends Activity {
 
@@ -22,6 +25,10 @@ public class GuideActivity extends Activity {
     private ImageView iv_red_point;
 
     private ArrayList<ImageView> imageViews;
+    /**
+     * 两点的间距
+     */
+    private int leftDes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,12 @@ public class GuideActivity extends Activity {
 
         //设置ViewPager的适配器
         viewPager.setAdapter(new MyPagerAdapter());
+
+        //根据View的生命周期，当视图执行到onLayout或者onDraw的时候，视图的高和宽、边距都有了
+        iv_red_point.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener());
+
+        //得到屏幕滑动的百分比
+        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
     }
 
     class MyPagerAdapter extends PagerAdapter
@@ -120,6 +133,51 @@ public class GuideActivity extends Activity {
         public void destroyItem(ViewGroup container, int position, Object object) {
 //            super.destroyItem(container, position, object);
             container.removeView((View) object);
+        }
+    }
+
+    class MyOnGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener
+    {
+
+        @Override
+        public void onGlobalLayout() {
+            //执行不只一次，所以监听一次就移除监听
+            iv_red_point.getViewTreeObserver().removeOnGlobalLayoutListener();
+
+            leftDes = ll_point_group.getChildAt(1).getLeft() - ll_point_group.getChildAt(0).getLeft();
+
+        }
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener
+    {
+        /**
+         * 当页面滑动了会回调这个方法
+         * @param position  当前滑动页面的位置
+         * @param positionOffset    页面滑动的百分比
+         * @param positionOffsetPixels  滑动的像素
+         */
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        /**
+         * 当页面被选中时回调这个方法
+         * @param position 被选中页面对应的位置
+         */
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        /**
+         * 当ViewPager页面滑动状态发生变化的时候：拖拽，静止，惯性滚动
+         * @param state
+         */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 }
